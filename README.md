@@ -1,51 +1,38 @@
-# BookWise
+# Shelfbox
 
-BookWise é uma plataforma web para gerenciamento de livros pessoais, criada para ajudar leitores a organizarem suas leituras, acompanharem metas e visualizarem seu progresso ao longo do tempo.
+Shelfbox é um projeto escolar inspirado no Letterboxd, mas voltado para leitores.
+
+A ideia é oferecer um espaço onde o usuário possa registrar livros, avaliar leituras, acompanhar metas anuais e organizar sua biblioteca pessoal de forma simples e visual.
+
+---
 
 ## Funcionalidades
 
-### Gerenciamento de Livros
-- Adicionar livros à biblioteca
-- Editar informações dos livros
-- Remover livros cadastrados
-- Marcar livros como lidos ou não lidos
+- Adicionar livros
+- Editar informações
+- Remover livros
+- Avaliar leituras
+- Acompanhar progresso de leitura
+- Definir meta anual
+- Filtrar livros
+- Pesquisar títulos e autores
+- Estatísticas automáticas
+- Armazenamento local com LocalStorage
+- Interface responsiva
 
-### Estatísticas
-- Total de livros cadastrados
-- Quantidade de livros lidos
-- Total de páginas lidas
-- Acompanhamento da meta anual de leitura
+---
 
-### Meta de Leitura
-- Definir uma meta anual personalizada
-- Barra de progresso visual
-- Cálculo automático da porcentagem concluída
-- Quantidade de livros restantes para atingir a meta
+## Objetivo do Projeto
 
-### Busca e Filtros
-- Pesquisa por título ou autor
-- Filtro por status de leitura
-- Ordenação por:
-  - Título
-  - Autor
-  - Ano crescente
-  - Ano decrescente
+Este projeto foi desenvolvido como atividade escolar para praticar conceitos de:
 
-### Avaliação de Livros
-- Sistema simples de notas
-- Registro de avaliações individuais
-
-### Controle de Páginas
-- Registro do total de páginas
-- Acompanhamento do progresso de leitura
-- Barra de progresso para cada livro
-
-### Modo Escuro
-- Alternância entre tema claro e escuro
-- Interface adaptada para ambos os modos
-
-### Responsividade
-- Compatível com computadores, tablets e celulares
+- HTML5
+- CSS3
+- JavaScript
+- Manipulação do DOM
+- LocalStorage
+- Organização de código
+- Design responsivo
 
 ---
 
@@ -53,20 +40,9 @@ BookWise é uma plataforma web para gerenciamento de livros pessoais, criada par
 
 - HTML5
 - CSS3
-- JavaScript (Vanilla JS)
-- LocalStorage para persistência de dados
+- JavaScript (ES6)
+- LocalStorage
 
-## Objetivos do Projeto
 
-Este projeto foi desenvolvido para praticar conceitos de manipulação do DOM, eventos em JavaScript, armazenamento Local, organização de código e responsividade.
 
-## Melhorias Futuras
-
-- Upload de capas dos livros
-- Categorias e gêneros
-- Sistema de favoritos
-- Diário de leitura
-- Exportação de dados
-- Gráficos de desempenho
-- Integração com APIs de livros
-- Sistema de usuários
+└── README.md
