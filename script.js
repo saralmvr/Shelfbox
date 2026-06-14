@@ -736,7 +736,7 @@ function seedDemoData() {
       favorite: true, readDate: '2024-01-20', createdAt: new Date(Date.now() - 8e6).toISOString()
     },
     {
-      id: uid(), title: 'O Pequeno Príncipe', author: ' Antoine de Saint-Exupéry', year: '1943',
+      id: uid(), title: 'O Pequeno Príncipe', author: 'Antoine de Saint-Exupéry', year: '1943',
       cover: 'https://upload.wikimedia.org/wikipedia/pt/4/47/O-pequeno-pr%C3%ADncipe.jpg',
       status: 'read', rating: 5, review: 'Uma fábula simples e profunda que convida à reflexão sobre amizade, amor e o sentido da vida.',
       favorite: true, readDate: '2024-02-10', createdAt: new Date(Date.now() - 7e6).toISOString()
@@ -748,20 +748,20 @@ function seedDemoData() {
       favorite: false, readDate: '2023-12-05', createdAt: new Date(Date.now() - 6e6).toISOString()
     },
     {
-      id: uid(), title: 'O Nome do Vento', author: 'Patrick Rothfuss', year: '2007',
-      cover: 'https://covers.openlibrary.org/b/id/7915477-M.jpg',
+      id: uid(), title: 'Verity', author: 'Collen Hoover', year: '2018',
+      cover: 'https://m.media-amazon.com/images/I/91SDZ2eUj+L._AC_UF1000,1000_QL80_.jpg',
       status: 'reading', rating: 0, review: '',
       favorite: false, readDate: null, createdAt: new Date(Date.now() - 5e6).toISOString()
     },
     {
       id: uid(), title: 'Crime e Castigo', author: 'Fiódor Dostoiévski', year: '1866',
-      cover: 'https://covers.openlibrary.org/b/id/8290681-M.jpg',
+      cover: 'https://cdn.awsli.com.br/2551/2551876/produto/2427291902deb25de03.jpg',
       status: 'want', rating: 0, review: '',
       favorite: false, readDate: null, createdAt: new Date(Date.now() - 4e6).toISOString()
     },
     {
-      id: uid(), title: 'Vidas Secas', author: 'Graciliano Ramos', year: '19',
-      cover: 'https://m.media-amazon.com/images/I/81XpG2iKTlL._AC_UF1000,1000_QL80_.jpg',
+      id: uid(), title: 'Vidas Secas', author: 'Graciliano Ramos', year: '1938',
+      cover: 'https://m.media-amazon.com/images/I/71NYL2AbBIL._AC_UF1000,1000_QL80_.jpg',
       status: 'read', rating: 4, review: 'Um retrato poderoso e comovente da luta pela sobrevivência no sertão brasileiro.',
       favorite: false, readDate: '2023-11-12', createdAt: new Date(Date.now() - 3e6).toISOString()
     },
