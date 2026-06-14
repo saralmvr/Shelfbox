@@ -1,123 +1,347 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookWise</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shelfbox — Sua estante digital</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-left">
-                <h1>BookWise</h1>
-                <p>Gerencie seus livros de forma simples e eficiente</p>
-            </div>
-            <button id="darkModeBtn" class="dark-mode-btn">Modo Escuro</button>
-        </header>
-
-        <div class="form-container">
-            <h2>Adicionar Novo Livro</h2>
-            <form id="bookForm">
-                <div class="form-group">
-                    <input type="text" id="title" placeholder="Título do livro *" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="author" placeholder="Autor *" required>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="year" placeholder="Ano de publicação *" min="0" max="2026" required>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="pages" placeholder="Número de páginas (opcional)" min="0">
-                </div>
-                <div class="form-group checkbox-group">
-                    <label>
-                        <input type="checkbox" id="read"> Já li este livro
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary">Adicionar à Estante</button>
-            </form>
-        </div>
-
-        <div class="stats-container">
-            <h2>Estatísticas</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalBooks">0</div>
-                    <div class="stat-label">Total de Livros</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="readBooks">0</div>
-                    <div class="stat-label">Livros Lidos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="totalPaginasLidas">0</div>
-                    <div class="stat-label">Total de Páginas Lidas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="metaProgress">0%</div>
-                    <div class="stat-label">Meta de Leitura</div>
-                </div>
-            </div>
-           
-            <div class="meta-container">
-                <div class="meta-header">
-                    <span>Meta Anual: <span id="metaAtual">12</span> livros</span>
-                    <button id="editarMetaBtn" class="btn-meta">Editar Meta</button>
-                </div>
-                <div class="meta-bar-container">
-                    <div class="meta-bar-fill" id="metaBarFill" style="width: 0%"></div>
-                </div>
-                <div class="meta-info">
-                    <span id="livrosFaltando">Faltam 12 livros para bater a meta</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="filters-container">
-            <h2>Filtros e Busca</h2>
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label>Filtrar por status:</label>
-                    <select id="statusFilter">
-                        <option value="all">Todos os livros</option>
-                        <option value="read">Já lidos</option>
-                        <option value="unread">Não lidos</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Buscar por título/autor:</label>
-                    <input type="text" id="searchInput" placeholder="Digite para buscar...">
-                </div>
-                <div class="filter-group">
-                    <label>Ordenar por:</label>
-                    <select id="sortBy">
-                        <option value="title">Título (A-Z)</option>
-                        <option value="yearAsc">Ano (crescente)</option>
-                        <option value="yearDesc">Ano (decrescente)</option>
-                        <option value="author">Autor (A-Z)</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="books-container">
-            <div class="books-header">
-                <div class="header-left-group">
-                    <h2>Minha Estante</h2>
-                    <div class="view-buttons">
-                        <button id="gridViewBtn" class="view-btn active">Tabela</button>
-                        <button id="listViewBtn" class="view-btn">Lista</button>
-                    </div>
-                </div>
-            </div>
-            <div id="booksList" class="books-list grid-view">
-            </div>
-        </div>
+  <nav class="navbar" id="navbar">
+    <div class="navbar__brand">
+      <svg class="navbar__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="4" width="10" height="24" rx="2" fill="#674ea7"/>
+        <rect x="14" y="4" width="10" height="24" rx="2" fill="#5234a0"/>
+        <rect x="8" y="2" width="18" height="28" rx="2" fill="#741b47" opacity="0.8"/>
+        <rect x="10" y="4" width="14" height="24" rx="2" fill="#1D232A" stroke="#674ea7" stroke-width="1"/>
+        <line x1="13" y1="10" x2="21" y2="10" stroke="#9d99bb" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="14" x2="21" y2="14" stroke="#9d99bb" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="18" x2="18" y2="18" stroke="#9d99bb" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="navbar__wordmark">Shelfbox</span>
     </div>
+    <ul class="navbar__links" id="navLinks">
+      <li><a href="#inicio" class="nav-link active" data-section="inicio">Início</a></li>
+      <li><a href="#diario" class="nav-link" data-section="diario">Diário</a></li>
+      <li><a href="#livros" class="nav-link" data-section="livros">Livros</a></li>
+      <li><a href="#estatisticas" class="nav-link" data-section="estatisticas">Estatísticas</a></li>
+      <li><a href="#perfil" class="nav-link" data-section="perfil">Perfil</a></li>
+    </ul>
+    <div class="navbar__actions">
+      <button class="btn btn--ghost" id="searchToggle" aria-label="Buscar livro">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="btn btn--primary" id="addBookBtn">+ Adicionar</button>
+      <button class="navbar__hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#inicio" class="nav-link" data-section="inicio">Início</a></li>
+      <li><a href="#diario" class="nav-link" data-section="diario">Diário</a></li>
+      <li><a href="#livros" class="nav-link" data-section="livros">Livros</a></li>
+      <li><a href="#estatisticas" class="nav-link" data-section="estatisticas">Estatísticas</a></li>
+      <li><a href="#perfil" class="nav-link" data-section="perfil">Perfil</a></li>
+      <li><button class="btn btn--primary btn--full" id="addBookBtnMobile">+ Adicionar Livro</button></li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="search-bar" id="searchBar">
+    <div class="search-bar__inner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar por título, autor…" autocomplete="off" />
+      <button id="searchClose" aria-label="Fechar busca">✕</button>
+    </div>
+  </div>
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero__bg-pattern"></div>
+      <div class="hero__content">
+        <p class="hero__eyebrow">Sua estante. Sua história.</p>
+        <h1 class="hero__title">
+          Cada livro lido<br/>
+          <span class="hero__title--accent">deixa uma marca.</span>
+        </h1>
+        <p class="hero__subtitle">
+          Registre, avalie e descubra livros com a mesma paixão que você dedica à leitura.
+        </p>
+        <div class="hero__cta">
+          <button class="btn btn--primary btn--lg" id="heroAddBtn">Adicionar Livro</button>
+          <button class="btn btn--ghost btn--lg" onclick="document.getElementById('livros').scrollIntoView({behavior:'smooth'})">Ver Estante</button>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="book-stack" id="heroBookStack">
+        </div>
+      </div>
+    </section>
 
-    <script src="script.js"></script>
+    <section class="section" id="perfil">
+      <div class="container">
+        <div class="profile-card">
+          <div class="profile-card__avatar-wrap">
+            <img id="profileAvatar" src="" alt="Avatar" class="profile-card__avatar" />
+            <button class="profile-card__avatar-edit" id="editAvatarBtn" title="Editar avatar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+          <div class="profile-card__info">
+            <h2 class="profile-card__name" id="profileName">Leitor(a)</h2>
+            <p class="profile-card__bio" id="profileBio">Apaixonado(a) por livros e histórias.</p>
+            <div class="profile-card__stats">
+              <div class="profile-stat">
+                <span class="profile-stat__value" id="statTotalBooks">0</span>
+                <span class="profile-stat__label">Livros</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat__value" id="statReadBooks">0</span>
+                <span class="profile-stat__label">Lidos</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat__value" id="statAvgRating">—</span>
+                <span class="profile-stat__label">Média</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn--ghost btn--sm profile-card__edit" id="editProfileBtn">Editar Perfil</button>
+        </div>
+        <div class="favorites-strip">
+          <h3 class="favorites-strip__title">Favoritos</h3>
+          <div class="favorites-strip__grid" id="favoritesGrid">
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section section--alt" id="estatisticas">
+      <div class="container">
+        <h2 class="section__title">Estatísticas</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__icon">📚</div>
+            <div class="stat-card__value" id="sTotal">0</div>
+            <div class="stat-card__label">Total de livros</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">✅</div>
+            <div class="stat-card__value" id="sRead">0</div>
+            <div class="stat-card__label">Livros lidos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">📖</div>
+            <div class="stat-card__value" id="sReading">0</div>
+            <div class="stat-card__label">Lendo agora</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">⭐</div>
+            <div class="stat-card__value" id="sAvg">—</div>
+            <div class="stat-card__label">Nota média</div>
+          </div>
+          <div class="stat-card stat-card--wide">
+            <div class="stat-card__icon">🎯</div>
+            <div class="stat-card__value">
+              <span id="sGoalRead">0</span>/<span id="sGoalTotal">20</span>
+            </div>
+            <div class="stat-card__label">Meta anual de leitura</div>
+            <div class="goal-bar">
+              <div class="goal-bar__fill" id="goalBarFill" style="width:0%"></div>
+            </div>
+            <button class="btn btn--ghost btn--sm goal-btn" id="editGoalBtn">Editar meta</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="livros">
+      <div class="container">
+        <div class="books-header">
+          <h2 class="section__title">Minha Estante</h2>
+          <div class="books-controls">
+            <div class="filter-chips" id="filterChips">
+              <button class="chip chip--active" data-filter="all">Todos</button>
+              <button class="chip" data-filter="read">Lidos</button>
+              <button class="chip" data-filter="reading">Lendo</button>
+              <button class="chip" data-filter="want">Quero Ler</button>
+            </div>
+            <select class="select" id="sortSelect">
+              <option value="date-desc">Mais recentes</option>
+              <option value="date-asc">Mais antigos</option>
+              <option value="rating-desc">Maior nota</option>
+              <option value="rating-asc">Menor nota</option>
+              <option value="title-asc">Título A→Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="books-grid" id="booksGrid">
+        </div>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state__icon">📖</div>
+          <h3>Sua estante está vazia</h3>
+          <p>Adicione seu primeiro livro para começar a sua jornada literária.</p>
+          <button class="btn btn--primary" id="emptyAddBtn">Adicionar Livro</button>
+        </div>
+      </div>
+    </section>
+    <section class="section section--alt" id="diario">
+      <div class="container">
+        <h2 class="section__title">Diário de Leitura</h2>
+        <div class="diary-list" id="diaryList">
+        </div>
+        <div class="empty-state" id="diaryEmpty">
+          <div class="empty-state__icon">🗒️</div>
+          <h3>Nenhuma entrada ainda</h3>
+          <p>Quando você registrar um livro como lido com uma resenha, ele aparecerá aqui.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <span class="navbar__wordmark">Shelfbox</span>
+      <p>Feito com amor para leitores apaixonados</p>
+    </div>
+  </footer>
+  <div class="modal-backdrop" id="bookModalBackdrop">
+    <div class="modal" id="bookModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Adicionar Livro</h2>
+        <button class="modal__close" id="modalClose" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="cover-preview-wrap">
+          <img id="coverPreview" src="" alt="Capa do livro" class="cover-preview" />
+          <div class="cover-preview-placeholder" id="coverPlaceholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg>
+            <span>Prévia da capa</span>
+          </div>
+        </div>
+        <form class="modal__form" id="bookForm" novalidate>
+          <input type="hidden" id="bookId" />
+          <div class="form-row">
+            <div class="form-group form-group--2">
+              <label class="form-label" for="bookTitle">Título *</label>
+              <input class="form-input" type="text" id="bookTitle" placeholder="Ex: Dom Casmurro" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bookAuthor">Autor *</label>
+              <input class="form-input" type="text" id="bookAuthor" placeholder="Ex: Machado de Assis" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="bookYear">Ano</label>
+              <input class="form-input" type="number" id="bookYear" placeholder="Ex: 1899" min="0" max="2099" />
+            </div>
+            <div class="form-group form-group--2">
+              <label class="form-label" for="bookCover">URL da capa</label>
+              <div class="input-with-action">
+                <input class="form-input" type="url" id="bookCover" placeholder="https://… ou deixe vazio para buscar" />
+                <button type="button" class="btn btn--ghost btn--sm" id="fetchCoverBtn">Buscar</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="bookStatus">Status *</label>
+              <select class="form-input select" id="bookStatus" required>
+                <option value="want">Quero Ler</option>
+                <option value="reading">Lendo</option>
+                <option value="read">Lido</option>
+              </select>
+            </div>
+            <div class="form-group form-group--2">
+              <label class="form-label">Nota</label>
+              <div class="star-rating" id="starRating" data-value="0">
+                <span class="star" data-star="1">★</span>
+                <span class="star" data-star="2">★</span>
+                <span class="star" data-star="3">★</span>
+                <span class="star" data-star="4">★</span>
+                <span class="star" data-star="5">★</span>
+              </div>
+              <input type="hidden" id="bookRating" value="0" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bookReview">Resenha</label>
+            <textarea class="form-input form-textarea" id="bookReview" placeholder="O que você achou deste livro? (opcional)" rows="3"></textarea>
+          </div>
+          <div class="form-group" id="favoriteGroup">
+            <label class="form-label form-label--check">
+              <input type="checkbox" id="bookFavorite" class="form-checkbox" />
+              <span>Adicionar aos favoritos</span>
+            </label>
+          </div>
+          <div class="form-group" id="readDateGroup" style="display:none">
+            <label class="form-label" for="bookReadDate">Data de leitura</label>
+            <input class="form-input" type="date" id="bookReadDate" />
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--danger btn--sm" id="deleteBookBtn" style="display:none">Excluir</button>
+        <div class="modal__footer-right">
+          <button class="btn btn--ghost" id="cancelModalBtn">Cancelar</button>
+          <button class="btn btn--primary" id="saveBookBtn">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="profileModalBackdrop">
+    <div class="modal modal--sm" role="dialog" aria-modal="true">
+      <div class="modal__header">
+        <h2 class="modal__title">Editar Perfil</h2>
+        <button class="modal__close" id="profileModalClose">✕</button>
+      </div>
+      <div class="modal__body">
+        <form class="modal__form" id="profileForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="profileNameInput">Nome</label>
+            <input class="form-input" type="text" id="profileNameInput" placeholder="Seu nome" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileBioInput">Biografia</label>
+            <textarea class="form-input form-textarea" id="profileBioInput" rows="2" placeholder="Fale sobre você…"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileAvatarInput">URL do avatar</label>
+            <input class="form-input" type="url" id="profileAvatarInput" placeholder="https://…" />
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <div class="modal__footer-right">
+          <button class="btn btn--ghost" id="cancelProfileBtn">Cancelar</button>
+          <button class="btn btn--primary" id="saveProfileBtn">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="goalModalBackdrop">
+    <div class="modal modal--sm" role="dialog" aria-modal="true">
+      <div class="modal__header">
+        <h2 class="modal__title">Meta de Leitura</h2>
+        <button class="modal__close" id="goalModalClose">✕</button>
+      </div>
+      <div class="modal__body">
+        <form class="modal__form" id="goalForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="goalInput">Quantos livros deseja ler em <span id="goalYear"></span>?</label>
+            <input class="form-input" type="number" id="goalInput" min="1" max="365" value="20" />
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <div class="modal__footer-right">
+          <button class="btn btn--ghost" id="cancelGoalBtn">Cancelar</button>
+          <button class="btn btn--primary" id="saveGoalBtn">Salvar Meta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
 </body>
 </html>
-
