@@ -1,27 +1,11 @@
-/**
- * SHELFBOX — app.js
- * Arquitetura: Estado central → Renderização reativa → Eventos
- *
- * Fluxo:
- *  1. AppState carrega do localStorage
- *  2. render() sincroniza o DOM com o estado
- *  3. Eventos do usuário → mutam AppState → chamam render()
- *  4. persist() salva no localStorage a cada mutação
- */
-
 'use strict';
 
-/* ================================================================
-   ESTADO CENTRAL
-   Toda a aplicação parte deste objeto. Nunca mute sem passar por
-   saveState() para garantir persistência.
-================================================================ */
 const STORAGE_KEY = 'shelfbox_v2';
 
-/** @returns {AppState} Estado inicial padrão */
+@returns {AppState} 
 function defaultState() {
   return {
-    books: [],       // Array de BookObj
+    books: [],       
     profile: {
       name: 'Leitor(a)',
       bio: 'Apaixonado(a) por livros e histórias.',
@@ -39,42 +23,31 @@ function defaultState() {
   };
 }
 
-/** Carrega estado do localStorage ou retorna padrão */
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState();
     const stored = JSON.parse(raw);
-    // Merge com defaults para compatibilidade futura
     return { ...defaultState(), ...stored };
   } catch {
     return defaultState();
   }
 }
 
-/** Persiste estado no localStorage */
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(AppState));
 }
 
-// Estado global (singleton)
 const AppState = loadState();
 
-/* ================================================================
-   UTILITÁRIOS
-================================================================ */
-
-/** Gera ID único */
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-/** Formata data para pt-BR */
 function formatDate(iso) {
   if (!iso) return '';
   const d = new Date(iso + 'T00:00:00');
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-/** Gera string de estrelas a partir de nota (0-5) */
 function starsHTML(rating, max = 5) {
   if (!rating) return '';
   let s = '';
@@ -84,14 +57,12 @@ function starsHTML(rating, max = 5) {
   return s;
 }
 
-/** Mapa de status legível */
 const STATUS_LABEL = {
   read: 'Lido',
   reading: 'Lendo',
   want: 'Quero Ler'
 };
 
-/** Exibe toast de notificação */
 let toastTimer;
 function toast(msg, type = 'default') {
   const el = document.getElementById('toast');
@@ -103,10 +74,6 @@ function toast(msg, type = 'default') {
   }, 3000);
 }
 
-/**
- * Busca capa na Open Library (API pública, sem chave).
- * Retorna URL da capa ou null se não encontrar.
- */
 async function fetchCoverUrl(title, author = '') {
   try {
     const q = encodeURIComponent(`${title} ${author}`.trim());
@@ -120,11 +87,6 @@ async function fetchCoverUrl(title, author = '') {
   }
 }
 
-/* ================================================================
-   FUNÇÕES DE NEGÓCIO (puras em relação ao DOM)
-================================================================ */
-
-/** Adiciona ou atualiza livro no estado */
 function upsertBook(bookData) {
   const idx = AppState.books.findIndex(b => b.id === bookData.id);
   if (idx >= 0) {
@@ -135,21 +97,17 @@ function upsertBook(bookData) {
   saveState();
 }
 
-/** Remove livro pelo ID */
 function removeBook(id) {
   AppState.books = AppState.books.filter(b => b.id !== id);
   saveState();
 }
 
-/** Retorna livros filtrados + ordenados + pesquisados */
 function filteredBooks() {
   const { filter, sort, search } = AppState.ui;
   let list = [...AppState.books];
 
-  // Filtro de status
   if (filter !== 'all') list = list.filter(b => b.status === filter);
 
-  // Busca
   if (search.trim()) {
     const q = search.toLowerCase();
     list = list.filter(b =>
@@ -158,7 +116,6 @@ function filteredBooks() {
     );
   }
 
-  // Ordenação
   list.sort((a, b) => {
     switch (sort) {
       case 'date-desc': return new Date(b.createdAt) - new Date(a.createdAt);
@@ -173,7 +130,6 @@ function filteredBooks() {
   return list;
 }
 
-/** Calcula estatísticas a partir do estado */
 function calcStats() {
   const books = AppState.books;
   const readBooks  = books.filter(b => b.status === 'read');
@@ -191,11 +147,6 @@ function calcStats() {
   };
 }
 
-/* ================================================================
-   RENDER — sincroniza DOM com AppState
-================================================================ */
-
-/** Renderização completa (chamada em mutações de estado) */
 function render() {
   renderProfile();
   renderStats();
@@ -205,7 +156,6 @@ function render() {
   renderHeroStack();
 }
 
-/* ---- Profile ---- */
 function renderProfile() {
   const { name, bio, avatar } = AppState.profile;
   const stats = calcStats();
@@ -221,7 +171,6 @@ function renderProfile() {
   document.getElementById('statAvgRating').textContent  = stats.avgRating || '—';
 }
 
-/* ---- Estatísticas ---- */
 function renderStats() {
   const stats = calcStats();
   const goal  = AppState.goal;
@@ -238,7 +187,6 @@ function renderStats() {
   document.getElementById('goalBarFill').style.width = `${pct}%`;
 }
 
-/* ---- Grid de Livros ---- */
 function renderBooksGrid() {
   const grid  = document.getElementById('booksGrid');
   const empty = document.getElementById('emptyState');
@@ -259,7 +207,6 @@ function renderBooksGrid() {
   });
 }
 
-/** Cria elemento DOM de card de livro */
 function buildBookCard(book) {
   const el = document.createElement('div');
   el.className = 'book-card';
@@ -294,17 +241,14 @@ function buildBookCard(book) {
   return el;
 }
 
-/** Escape HTML simples para prevenir XSS */
 function escHtml(str = '') {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ---- Diário ---- */
 function renderDiary() {
   const list  = document.getElementById('diaryList');
   const empty = document.getElementById('diaryEmpty');
 
-  // Apenas livros lidos com data ou resenha
   const entries = AppState.books
     .filter(b => b.status === 'read' && (b.readDate || b.review))
     .sort((a, b) => {
@@ -345,14 +289,12 @@ function renderDiary() {
   });
 }
 
-/* ---- Favoritos ---- */
 function renderFavorites() {
   const grid = document.getElementById('favoritesGrid');
   const favs = AppState.books.filter(b => b.favorite);
 
   grid.innerHTML = '';
 
-  // Máximo de 8 favoritos no strip
   const items = favs.slice(0, 8);
 
   if (!items.length) {
@@ -373,7 +315,6 @@ function renderFavorites() {
   });
 }
 
-/* ---- Hero stack (3 capas empilhadas) ---- */
 function renderHeroStack() {
   const stack = document.getElementById('heroBookStack');
   const withCovers = AppState.books.filter(b => b.cover).slice(0, 3);
@@ -387,7 +328,6 @@ function renderHeroStack() {
     return;
   }
 
-  // Padeia com placeholders se menos de 3
   const items = [...withCovers];
   while (items.length < 3) items.push(null);
 
@@ -401,26 +341,19 @@ function renderHeroStack() {
   ).join('');
 }
 
-/* ================================================================
-   MODAL DE LIVRO
-================================================================ */
-
 let _editingId = null; // null = novo livro
 
-/** Abre modal para novo livro */
 function openAddModal() {
   _editingId = null;
   resetBookForm();
   document.getElementById('modalTitle').textContent = 'Adicionar Livro';
   document.getElementById('deleteBookBtn').style.display = 'none';
 
-  // Data padrão = hoje
   document.getElementById('bookReadDate').value = new Date().toISOString().split('T')[0];
 
   openModal('bookModalBackdrop');
 }
 
-/** Abre modal para edição */
 function openEditModal(id) {
   _editingId = id;
   const book = AppState.books.find(b => b.id === id);
@@ -430,7 +363,6 @@ function openEditModal(id) {
   document.getElementById('modalTitle').textContent = 'Editar Livro';
   document.getElementById('deleteBookBtn').style.display = 'inline-flex';
 
-  // Preenche campos
   document.getElementById('bookId').value       = book.id;
   document.getElementById('bookTitle').value    = book.title;
   document.getElementById('bookAuthor').value   = book.author;
@@ -449,7 +381,6 @@ function openEditModal(id) {
   openModal('bookModalBackdrop');
 }
 
-/** Salva livro (add ou edit) */
 async function saveBook() {
   const title  = document.getElementById('bookTitle').value.trim();
   const author = document.getElementById('bookAuthor').value.trim();
@@ -462,7 +393,6 @@ async function saveBook() {
 
   let cover = document.getElementById('bookCover').value.trim();
 
-  // Se não tem capa e é um livro novo, tenta buscar automaticamente
   if (!cover && !_editingId) {
     const btn = document.getElementById('saveBookBtn');
     btn.textContent = 'Buscando capa…';
@@ -491,7 +421,6 @@ async function saveBook() {
   toast(_editingId ? 'Livro atualizado!' : 'Livro adicionado à estante!', 'success');
 }
 
-/** Exclui livro */
 function deleteBook() {
   if (!_editingId) return;
   if (!confirm('Tem certeza que deseja remover este livro?')) return;
@@ -501,7 +430,6 @@ function deleteBook() {
   toast('Livro removido.', 'default');
 }
 
-/** Reseta form para estado em branco */
 function resetBookForm() {
   document.getElementById('bookForm').reset();
   document.getElementById('bookId').value   = '';
@@ -510,10 +438,6 @@ function resetBookForm() {
   updateCoverPreview('');
   toggleReadDateGroup('want');
 }
-
-/* ================================================================
-   SISTEMA DE ESTRELAS
-================================================================ */
 
 function initStarRating() {
   const container = document.getElementById('starRating');
@@ -525,13 +449,11 @@ function initStarRating() {
       highlightStars(val, 'hover');
     });
 
-    // Sai hover: volta ao valor salvo
     star.addEventListener('mouseleave', () => {
       const saved = Number(document.getElementById('bookRating').value);
       highlightStars(saved, 'active');
     });
 
-    // Clique: salva valor
     star.addEventListener('click', () => {
       const val = Number(star.dataset.star);
       document.getElementById('bookRating').value = val;
@@ -546,7 +468,6 @@ function setStarRating(value) {
   document.getElementById('bookRating').value = value;
 }
 
-/** Ilumina estrelas de 1 até `value` com classe `cls` */
 function highlightStars(value, cls) {
   const container = document.getElementById('starRating');
   container.querySelectorAll('.star').forEach(star => {
@@ -556,10 +477,6 @@ function highlightStars(value, cls) {
     }
   });
 }
-
-/* ================================================================
-   HELPERS DE MODAL
-================================================================ */
 
 function openModal(id) {
   document.getElementById(id).classList.add('open');
@@ -571,13 +488,11 @@ function closeModal(id) {
   document.body.style.overflow = '';
 }
 
-/** Mostra/oculta campo de data dependendo do status */
 function toggleReadDateGroup(status) {
   const group = document.getElementById('readDateGroup');
   group.style.display = status === 'read' ? 'flex' : 'none';
 }
 
-/** Atualiza preview de capa */
 function updateCoverPreview(url) {
   const img   = document.getElementById('coverPreview');
   const ph    = document.getElementById('coverPlaceholder');
@@ -595,10 +510,6 @@ function updateCoverPreview(url) {
     ph.style.display = '';
   }
 }
-
-/* ================================================================
-   MODAL DE PERFIL
-================================================================ */
 
 function openProfileModal() {
   const p = AppState.profile;
@@ -620,10 +531,6 @@ function saveProfile() {
   toast('Perfil atualizado!', 'success');
 }
 
-/* ================================================================
-   MODAL DE META
-================================================================ */
-
 function openGoalModal() {
   document.getElementById('goalInput').value = AppState.goal.total;
   document.getElementById('goalYear').textContent = AppState.goal.year;
@@ -640,10 +547,6 @@ function saveGoal() {
   render();
   toast('Meta atualizada!', 'success');
 }
-
-/* ================================================================
-   NAVBAR — scroll, hamburger, active link
-================================================================ */
 
 function initNavbar() {
   const navbar    = document.getElementById('navbar');
@@ -706,7 +609,6 @@ function initSearch() {
     debounce = setTimeout(() => {
       AppState.ui.search = input.value;
       renderBooksGrid();
-      // Scroll para seção de livros
       document.getElementById('livros').scrollIntoView({ behavior: 'smooth' });
     }, 250);
   });
@@ -722,7 +624,6 @@ function initSearch() {
 }
 
 function initFilters() {
-  // Chips de filtro
   document.getElementById('filterChips').addEventListener('click', e => {
     const chip = e.target.closest('.chip');
     if (!chip) return;
@@ -740,7 +641,6 @@ function initFilters() {
 }
 
 function initBookModalEvents() {
-  // Botão de busca de capa
   document.getElementById('fetchCoverBtn').addEventListener('click', async () => {
     const title  = document.getElementById('bookTitle').value.trim();
     const author = document.getElementById('bookAuthor').value.trim();
@@ -821,7 +721,7 @@ function initProfileEvents() {
 
 
 function seedDemoData() {
-  if (AppState.books.length > 0) return; // Já tem dados
+  if (AppState.books.length > 0) return;
 
   const demo = [
     {
