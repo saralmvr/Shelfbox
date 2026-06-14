@@ -761,7 +761,7 @@ function seedDemoData() {
     },
     {
       id: uid(), title: 'Vidas Secas', author: 'Graciliano Ramos', year: '1938',
-      cover: 'https://m.media-amazon.com/images/I/71NYL2AbBIL._AC_UF1000,1000_QL80_.jpg',
+      cover: 'https://covers.openlibrary.org/b/id/12369687-M.jpg',
       status: 'read', rating: 4, review: 'Um retrato poderoso e comovente da luta pela sobrevivência no sertão brasileiro.',
       favorite: false, readDate: '2023-11-12', createdAt: new Date(Date.now() - 3e6).toISOString()
     },
